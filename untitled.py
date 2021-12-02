@@ -53,3 +53,16 @@ cachedMinionsDirectory = "/var/cache/salt/master/minions"
 cachedMinionList = os.listdir(cachedMinionsDirectory)
 print(cachedMinionList)
 
+#Setup Minion rekey states
+
+#Send command to minions to rekey
+
+#Rekey Salt-Master
+
+#Have Script Sleep for 2 minutes to give Minions time to send auth requests
+
+#Accept each cached minions key from our cached list
+
+#Check for any leftover unaccepted minions that may have not been cached
+
+#Run cleanup state on minions
