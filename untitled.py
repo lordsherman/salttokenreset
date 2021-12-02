@@ -23,6 +23,7 @@
 import salt.config
 import salt.loader
 import salt.client
+import os
 import sys
 
 opts = salt.config.master_config('/etc/salt/master')
@@ -43,3 +44,12 @@ if res == False:
 	sys.exit(1)
 else:
 	print('All Minions Responded... Proceeding')
+
+#Generate list of cached minions to accept individually.
+#This is important to ensure we are not accepting any unwanted minions.
+#One possible issue is the time it may take to individually accept all 3k~ minions.
+
+cachedMinionsDirectory = "/var/cache/salt/master/minions"
+cachedMinionList = os.listdir(cachedMinionsDirectory)
+print(cachedMinionList)
+
