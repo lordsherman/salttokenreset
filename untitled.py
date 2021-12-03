@@ -8,11 +8,11 @@ import sys
 opts = salt.config.master_config('/etc/salt/master')
 local = salt.client.LocalClient()
 
-#Returns a dictionary list of all minions and if they respond to ping or not.
-pingJID = local.cmd_async('*', 'test.ping')
-
 #cmd_async will return a Job ID that we can then use to check if it completed succesfully.
 #Without this the script will error and time out if any minions dont respond.
+pingJID = local.cmd_async('*', 'test.ping')
+
+#Returns a dictionary list of all minions and if they respond to ping or not.
 runner = salt.runner.RunnerClient(opts)
 pinglist = runner.cmd('jobs.exit_success',[pingJID])
 
