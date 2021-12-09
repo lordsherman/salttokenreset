@@ -39,14 +39,16 @@ cachedMinionsDirectory = '/var/cache/salt/master/minions'
 cachedMinionList = os.listdir(cachedMinionsDirectory)
 
 #Send command to minions to rekey.  Runs Rekey-minion.sh
-
+print('Sending Rekey State to Minions')
 local.cmd('*', 'state.sls', ['rekey-minions'])
+time.sleep(60)
 
 #Rekey Salt-Master
-time.sleep(120)
+print('Rekeying Salt Master')
 PKI_DIR = '/etc/salt/pki/master'
 subprocess.run(['rm', '-rf', PKI_DIR])
 subprocess.run(['systemctl', 'restart', 'salt-master'])
+time.sleep(5)
 
 #Have Script Sleep for 2 minutes to give Minions time to send auth requests
 print('Pausing to give time for minion key exchange')
