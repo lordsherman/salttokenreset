@@ -30,10 +30,11 @@ if res == False:
 	sys.exit(1)
 else:
 	print('All Minions Responded... Proceeding')
-
+time.sleep(2)
 #Generate list of cached minions to accept individually.
 #This is important to ensure we are not accepting any unwanted minions.
 #One possible issue is the time it may take to individually accept all 3k~ minions.
+#Solution to prevent this could be to accept all but then check accepted keys against our old cached list, then reject/remove any extra?
 
 cachedMinionsDirectory = '/var/cache/salt/master/minions'
 cachedMinionList = os.listdir(cachedMinionsDirectory)
@@ -41,16 +42,16 @@ cachedMinionList = os.listdir(cachedMinionsDirectory)
 #Send command to minions to rekey.  Runs Rekey-minion.sh
 print('Sending Rekey State to Minions')
 local.cmd('*', 'state.sls', ['rekey-minions'])
-time.sleep(60)
+time.sleep(5)
 
 #Rekey Salt-Master
 print('Rekeying Salt Master')
 PKI_DIR = '/etc/salt/pki/master'
 subprocess.run(['rm', '-rf', PKI_DIR])
 subprocess.run(['systemctl', 'restart', 'salt-master'])
-time.sleep(5)
+time.sleep(60)
 
-#Have Script Sleep for 2 minutes to give Minions time to send auth requests
+#Have Script Sleep for 2 mSinutes to give Minions time to send auth requests
 print('Pausing to give time for minion key exchange')
 time.sleep(120)
 print('Time to Accept these Minions')
@@ -62,4 +63,4 @@ print('Did this work?')
 
 #Might need to restart salt-minions after key acceptance due to weird failure issues
 
-#Run cleanup state on minions
+#Run cleanup state on minions (might not be needed if we just keep the states and scripts on master)
