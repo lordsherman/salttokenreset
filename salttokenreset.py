@@ -39,6 +39,10 @@ time.sleep(2)
 cachedMinionsDirectory = '/var/cache/salt/master/minions'
 cachedMinionList = os.listdir(cachedMinionsDirectory)
 
+cachedCount = len(cachedMinionList)
+print('Found ', cachedCount,' Cached Minions')
+time.sleep(2)
+
 #Send command to minions to rekey.  Runs Rekey-minion.sh
 print('Sending Rekey State to Minions')
 local.cmd('*', 'state.sls', ['rekey-minions'])
@@ -51,7 +55,7 @@ subprocess.run(['rm', '-rf', PKI_DIR])
 subprocess.run(['systemctl', 'restart', 'salt-master'])
 time.sleep(60)
 
-#Have Script Sleep for 2 mSinutes to give Minions time to send auth requests
+#Have Script Sleep for 2 minutes to give Minions time to send auth requests
 print('Pausing to give time for minion key exchange')
 time.sleep(120)
 print('Time to Accept these Minions')
@@ -59,8 +63,8 @@ print('Time to Accept these Minions')
 
 for i in range(len(cachedMinionList)):
 	subprocess.run(['salt-key', '-a', cachedMinionList[i], '-y'])
-print('Did this work?')
+time.sleep(5)
 
-#Might need to restart salt-minions after key acceptance due to weird failure issues
+print("Cached Minion List Authenticated")
 
 #Run cleanup state on minions (might not be needed if we just keep the states and scripts on master)
