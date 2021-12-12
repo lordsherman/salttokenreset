@@ -1,3 +1,3 @@
 rm -r $PKI_DIR
-systemctl restart salt-minion
+salt-call --local service.restart salt-minion && salt-call --local service.start salt-minion
 
