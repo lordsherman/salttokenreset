@@ -1,6 +1,6 @@
 Rekey Salt Minion:
   file.absent:
-    - name: {{ salt['confi.get']('pki_dir') }}
+    - name: '/etc/salt/pki/minion'
 
 Restart Salt Minion:
   cmd.run:
