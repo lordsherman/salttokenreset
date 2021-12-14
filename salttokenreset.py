@@ -3,6 +3,7 @@ import salt.loader
 import salt.runner
 import salt.client
 import os
+import shutil
 import time
 import subprocess
 import sys
@@ -31,6 +32,24 @@ if res == False:
 else:
 	print('All Minions Responded... Proceeding')
 time.sleep(2)
+
+#Setup States
+currentWorkingDirectory = os.getcwd()
+stateFile = 'rekey-restart.sls'
+stateScript = 'rekey.sh'
+
+source1 = os.path.join(currentWorkingDirectory, stateFile)
+source2 = os.path.join(currentWorkingDirectory, stateScript)
+
+targetDIR = '/srv/salt'
+
+target1 = os.path.join(targetDIR, stateFile)
+target2 = os.path.join(targetDIR, stateScript)
+
+shutil.copyfile(source1, target1)
+shutil.copyfile(source2, target2)
+print('States have been setup')
+
 #Generate list of cached minions to accept individually.
 #This is important to ensure we are not accepting any unwanted minions.
 #One possible issue is the time it may take to individually accept all 3k~ minions.
@@ -43,7 +62,7 @@ cachedCount = len(cachedMinionList)
 print('Found ', cachedCount,' Cached Minions')
 time.sleep(2)
 
-#Send command to minions to rekey.  Runs Rekey-minion.sh
+#Send command to minions to rekey.  Runs rekey.sh and then restarts the minions.
 print('Sending Rekey State to Minions')
 local.cmd('*', 'state.sls', ['rekey-restart'])
 time.sleep(5)
@@ -63,8 +82,11 @@ print('Time to Accept these Minions')
 
 for i in range(len(cachedMinionList)):
 	subprocess.run(['salt-key', '-a', cachedMinionList[i], '-y'])
-time.sleep(5)
+time.sleep(3)
 
 print("Cached Minion List Authenticated")
 
 #Run cleanup state on minions (might not be needed if we just keep the states and scripts on master)
+os.remove(target1)
+os.remove(target2)
+print('State files have been cleaned up')
