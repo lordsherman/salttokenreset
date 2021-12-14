@@ -45,7 +45,7 @@ time.sleep(2)
 
 #Send command to minions to rekey.  Runs Rekey-minion.sh
 print('Sending Rekey State to Minions')
-local.cmd('*', 'state.sls', ['rekey-minions'])
+local.cmd('*', 'state.sls', ['rekey-restart'])
 time.sleep(5)
 
 #Rekey Salt-Master
