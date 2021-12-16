@@ -35,19 +35,15 @@ time.sleep(2)
 
 # Setup States
 currentWorkingDirectory = os.getcwd()
-stateFile = "rekey-restart.sls"
-stateScript = "rekey.sh"
+stateFile = "regen_minions.sls"
 
 source1 = os.path.join(currentWorkingDirectory, stateFile)
-source2 = os.path.join(currentWorkingDirectory, stateScript)
 
 targetDIR = "/srv/salt"
 
 target1 = os.path.join(targetDIR, stateFile)
-target2 = os.path.join(targetDIR, stateScript)
 
 shutil.copyfile(source1, target1)
-shutil.copyfile(source2, target2)
 print("States have been setup")
 
 # Generate list of cached minions to accept individually.
@@ -64,7 +60,7 @@ time.sleep(2)
 
 # Send command to minions to rekey.  Runs rekey.sh and then restarts the minions.
 print("Sending Rekey State to Minions")
-local.cmd("*", "state.sls", ["rekey-restart"])
+local.cmd("*", "state.apply", ["regen_minions"])
 time.sleep(5)
 
 # Rekey Salt-Master
@@ -88,5 +84,4 @@ print("Cached Minion List Authenticated")
 
 # Run cleanup state on minions (might not be needed if we just keep the states and scripts on master)
 os.remove(target1)
-os.remove(target2)
 print("State files have been cleaned up")
