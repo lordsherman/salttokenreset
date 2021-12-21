@@ -33,19 +33,6 @@ else:
     print("All Minions Responded... Proceeding")
 time.sleep(2)
 
-# Setup States
-currentWorkingDirectory = os.getcwd()
-stateFile = "regen_minions.sls"
-
-source1 = os.path.join(currentWorkingDirectory, stateFile)
-
-targetDIR = "/srv/salt"
-
-target1 = os.path.join(targetDIR, stateFile)
-
-shutil.copyfile(source1, target1)
-print("States have been setup")
-
 # Generate list of cached minions to accept individually.
 # This is important to ensure we are not accepting any unwanted minions.
 # One possible issue is the time it may take to individually accept all 3k~ minions.
@@ -81,7 +68,3 @@ for i in range(len(cachedMinionList)):
 time.sleep(3)
 
 print("Cached Minion List Authenticated")
-
-# Run cleanup state on minions (might not be needed if we just keep the states and scripts on master)
-os.remove(target1)
-print("State files have been cleaned up")
