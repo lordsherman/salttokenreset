@@ -35,8 +35,6 @@ time.sleep(2)
 
 # Generate list of cached minions to accept individually.
 # This is important to ensure we are not accepting any unwanted minions.
-# One possible issue is the time it may take to individually accept all 3k~ minions.
-# Solution to prevent this could be to accept all but then check accepted keys against our old cached list, then reject/remove any extra?
 
 cachedMinionsDirectory = "/var/cache/salt/master/minions"
 cachedMinionList = os.listdir(cachedMinionsDirectory)
